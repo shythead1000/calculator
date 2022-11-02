@@ -22,6 +22,9 @@ body{
 .display-screen{
     grid-column: 1/5;
     grid-row: 1/3;
+    color:rgb(18, 129, 173);
+    font-size: 20px;
+    padding: 1em;
 }
 button{
     color:rgb(18, 129, 173);

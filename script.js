@@ -31,35 +31,107 @@ function operate(operator, a, b){
     }
 };
 
-
-//const numInputs = document.querySelector('.num-inputs');
-//function updateDisplay(){
-//    numInputs.textContent = numDisplay;
-//};
-
 let number = '';
 let numbers = [];
 let operators = [];
+let inputNumbers = '';
 
 const numButtons = document.querySelectorAll('#a1, #a2, #a3, #a4, #a5, #a6, #a7, #a8, #a9, #a0');
-numButtons.forEach((button) => {
-    button.addEventListener('click', () => {
-        number = number+button.id[1];
-    })
-})
-
 const opButtons = document.querySelectorAll('#add, #asubtract, #amultiply, #adivide');
-opButtons.forEach((button) => {
-    button.addEventListener('click', () => {
-        finishNumber(button.id)
-    })
-})
+const equalButton = document.querySelector('#aequal');
+const clearButton = document.querySelector('#cler');
+const numOutputs = document.querySelector('.num-outputs');
+const numInputs = document.querySelector('.num-inputs');
+const allButtons = document.querySelectorAll('button');
+const backButton = document.querySelector('#bckspce');
+
+numberEvents();
+operateEvents();
+equalEvent();
+clearEvent();
+hovers();
+/* backspace();
+
+function backspace() {
+    backButton.addEventListener('click', () => {
+        if (isNaN(inputNumbers[(inputNumbers.length-1)])){
+            operators.pop();
+            inputDisplay('back');
+        }
+        else {
+            number.slice(0,-1);
+            inputDisplay('back');
+        }
+    });
+}; */
+
+function hovers() {
+    allButtons.forEach((button) => {
+        button.onmouseover = button.onmouseout = handler;
+        function handler(event) {
+            if (event.type == 'mouseover') {
+                event.target.style.borderRightWidth = '1px';
+                event.target.style.borderLeftWidth = '1px';
+                event.target.style.borderBottomWidth = '4px';
+            }
+            if (event.type == 'mouseout') {
+                event.target.style.borderRightWidth = '6px';
+                event.target.style.borderLeftWidth = '6px';
+                event.target.style.borderBottomWidth = '8px';
+            }
+        };
+    });
+};
+
+function numberEvents() {
+    numButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+            number = number+button.id[1];
+            inputDisplay(button.id[1]);
+        });
+    });    
+};
+
+function operateEvents() {
+    opButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+            finishNumber(button.id);
+            inputDisplay(button.id);
+        });
+    });
+};
+
+function equalEvent() {
+    equalButton.addEventListener('click', () => {
+        evaluate();
+        inputDisplay(equalButton.id);
+    });
+};
+
+function clearEvent() {
+    clearButton.addEventListener('click', () => {
+        number='';
+        numbers=[];
+        operators=[];
+        inputNumbers='';
+        outputDisplay(clearButton.id);
+        inputDisplay(clearButton.id);
+    });
+};
+
+function evaluate(){
+    numbers.push(number);
+    number='';
+    let outcome = operate(operators[0],numbers[0],numbers[1]);
+    numbers = [outcome];
+    operators = [];
+    outputDisplay();
+};
 
 function finishNumber(operator){
     numbers.push(number);
     number='';
     operators.push(operator);
-
     if(numbers.length>1){
         console.log(numbers)
         let outcome = operate(operators[0],numbers[0],numbers[1]);
@@ -68,7 +140,46 @@ function finishNumber(operator){
         console.log(numbers)
         console.log(operators)
     }
+    outputDisplay();
 };
+
+function outputDisplay(value){
+    if (value=='cler'){
+        numOutputs.textContent = '';
+    }
+
+    numOutputs.textContent = numbers[0];
+};
+
+function inputDisplay(value){
+    if(value=='add'){
+        value='+';
+    }
+    else if (value=='asubtract'){
+        value='-';
+    }
+    else if (value=='amultiply'){
+        value='x';
+    }
+    else if (value=='adivide'){
+        value='/';
+    }
+    else if (value=='aequal'){
+        value='=';
+    }
+    else if (value=='cler'){
+        numInputs.textContent = '';
+        return;
+    }
+    else if (value=='back'){
+        inputNumbers=inputNumbers.slice(0,-1);
+        numInputs.textContent = inputNumbers;
+        return
+    }
+    inputNumbers = inputNumbers+value;
+    numInputs.textContent = inputNumbers;
+};
+
 
 /* let buttons = document.querySelectorAll('button');
 buttons.forEach((button) => {
